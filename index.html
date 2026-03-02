@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Marks Card Generator</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    padding: 20px;
+}
+
+h2, h3 {
+    text-align: center;
+}
+
+input {
+    width: 95%;
+    padding: 6px;
+    margin: 6px 0;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 10px 5px;
+    cursor: pointer;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+th, td {
+    padding: 8px;
+    text-align: center;
+}
+
+.marks-card {
+    position: relative;
+    width: 800px;
+    background: white;
+    padding: 20px;
+    margin: 20px auto;
+    border: 2px solid black;
+    display: none;
+    overflow: hidden;
+}
+
+.bg-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    opacity: 0.08;
+    transform: translate(-50%, -50%);
+}
+
+.marks-content {
+    position: relative;
+    z-index: 1;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid black;
+    padding-bottom: 10px;
+}
+
+.header img {
+    width: 100px;
+}
+
+.header div {
+    flex: 1;
+    text-align: center;
+}
+
+.footer {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Student Marks Card Generator</h2>
+
+<label>Institute Name:</label>
+<input id="instituteName">
+
+<label>Upload Institute Logo:</label>
+<input type="file" accept="image/*" id="logoInput">
+
+<label>Student Name:</label>
+<input id="studentName">
+
+<label>Roll Number:</label>
+<input id="rollNumber">
+
+<label>Number of Subjects:</label>
+<input type="number" id="subjectCount" min="1" max="10" value="6"
+       onchange="createSubjects()">
+
+<h3>Subjects & Marks</h3>
+
+<table id="subjectTable">
+<tr>
+    <th>Subject</th>
+    <th>Marks</th>
+</tr>
+</table>
+
+<button onclick="generateMarksCard()">Generate Marks Card</button>
+<button onclick="resetForm()">Reset</button>
+
+<hr>
+
+<div class="marks-card" id="marksCard">
+
+    <img id="bgLogo" class="bg-logo">
+
+    <div class="marks-content">
+
+        <div class="header">
+            <img id="logoPreview">
+            <div>
+                <h2 id="instOut"></h2>
+                <h3>STUDENT MARKS CARD</h3>
+            </div>
+        </div>
+
+        <p><b>Student Name:</b> <span id="studentOut"></span></p>
+        <p><b>Roll Number:</b> <span id="rollOut"></span></p>
+
+        <table id="resultTable">
+            <tr>
+                <th>Sr</th>
+                <th>Subject</th>
+                <th>Marks</th>
+            </tr>
+        </table>
+
+        <p><b>Total Marks:</b> <span id="totalOut"></span></p>
+        <p><b>Percentage:</b> <span id="percentOut"></span>%</p>
+        <p><b>Grade:</b> <span id="gradeOut"></span></p>
+
+        <div class="footer">
+            <div>_________________<br>Institute Seal</div>
+            <div>_________________<br>Principal Signature</div>
+        </div>
+
+    </div>
+</div>
+
+<button onclick="downloadPDF()">Download PDF</button>
+
+<script>
+let logoData = "";
+
+document.getElementById("logoInput").addEventListener("change", function () {
+    const reader = new FileReader();
+    reader.onload = e => logoData = e.target.result;
+    reader.readAsDataURL(this.files[0]);
+});
+
+/* CREATE SUBJECT INPUTS */
+function createSubjects() {
+    const count = document.getElementById("subjectCount").value;
+    const table = document.getElementById("subjectTable");
+
+    table.innerHTML = `
+        <tr>
+            <th>Subject</th>
+            <th>Marks</th>
+        </tr>`;
+
+    for (let i = 1; i <= count; i++) {
+        table.innerHTML += `
+            <tr>
+                <td><input id="sub${i}" placeholder="Subject ${i}"></td>
+                <td><input id="mark${i}" type="number"></td>
+            </tr>`;
+    }
+}
+
+/* INITIAL SUBJECTS */
+createSubjects();
+
+/* GENERATE MARKS CARD */
+function generateMarksCard() {
+    const count = document.getElementById("subjectCount").value;
+    document.getElementById("marksCard").style.display = "block";
+
+    instOut.innerText = instituteName.value;
+    studentOut.innerText = studentName.value;
+    rollOut.innerText = rollNumber.value;
+
+    if (logoData) {
+        logoPreview.src = logoData;
+        bgLogo.src = logoData;
+    }
+
+    let table = document.getElementById("resultTable");
+    table.innerHTML = `
+        <tr>
+            <th>Sr</th>
+            <th>Subject</th>
+            <th>Marks</th>
+        </tr>`;
+
+    let total = 0;
+
+    for (let i = 1; i <= count; i++) {
+        let sub = document.getElementById("sub" + i).value || "Subject " + i;
+        let mark = Number(document.getElementById("mark" + i).value) || 0;
+        total += mark;
+
+        table.innerHTML += `
+            <tr>
+                <td>${i}</td>
+                <td>${sub}</td>
+                <td>${mark}</td>
+            </tr>`;
+    }
+
+    let percent = (total / count).toFixed(2);
+
+    let grade =
+        percent >= 75 ? "Distinction" :
+        percent >= 60 ? "First Class" :
+        percent >= 50 ? "Second Class" :
+        percent >= 35 ? "Pass" : "Fail";
+
+    totalOut.innerText = total;
+    percentOut.innerText = percent;
+    gradeOut.innerText = grade;
+}
+
+/* RESET ONLY NAME, ROLL & MARKS */
+function resetForm() {
+    studentName.value = "";
+    rollNumber.value = "";
+
+    const count = subjectCount.value;
+    for (let i = 1; i <= count; i++) {
+        document.getElementById("mark" + i).value = "";
+    }
+
+    document.getElementById("marksCard").style.display = "none";
+}
+
+/* DOWNLOAD PDF */
+function downloadPDF() {
+    html2pdf().from(document.getElementById("marksCard"))
+              .save("Marks_Card.pdf");
+}
+</script>
+
+</body>
+</html>
