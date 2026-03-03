@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road Accident Detection and Alert System</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f6f8;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1e1e1e, #4d4d4d);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0px 5px 20px rgba(0,0,0,0.15);
+            animation: slideUp 1s ease-in-out;
+        }
+
+        h2 {
+            margin-top: 15px;
+            border-left: 5px solid #b30000;
+            padding-left: 10px;
+            color: #333;
+            font-size: 22px;
+            opacity: 0;
+            animation: fadeIn 1.5s forwards;
+        }
+
+        p, ul, ol {
+            font-size: 17px;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+
+        ul li, ol li {
+            margin-bottom: 8px;
+        }
+
+        /* Code Box */
+        pre {
+            background: #1e1e1e;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-size: 15px;
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1e1e1e;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            margin-top: 30px;
+            font-size: 15px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Button Styling */
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #b30000;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 17px;
+            transition: 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #ff1a1a;
+            transform: scale(1.07);
+        }
+
+        /* Mobile Friendly */
+        @media (max-width: 600px) {
+            header h1 { font-size: 22px; }
+            h2 { font-size: 20px; }
+            p, ul, ol { font-size: 16px; }
+            pre { font-size: 14px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Road Accident Detection and Alert System</h1>
+</header>
+
+<div class="container">
+
+    <h2>Abstract</h2>
+    <p>
+        Road accidents are a major concern due to careless driving, poor safety awareness, and increasing traffic.
+        This project aims to provide an accident detection system using impact force sensing and alert generation.
+    </p>
+
+    <h2>Problem Statement</h2>
+    <p>
+        Rising accidents are caused by rash driving, poor roads, and violation of rules. This leads to injuries,
+        deaths, and property loss affecting families and society.
+    </p>
+
+    <h2>Implications</h2>
+    <ul>
+        <li><b>Threat to life:</b> More injuries and deaths.</li>
+        <li><b>Financial loss:</b> Vehicle and hospital costs rise.</li>
+        <li><b>Traffic chaos:</b> Roads get blocked.</li>
+        <li><b>Hospital load:</b> More emergency cases.</li>
+        <li><b>Government burden:</b> Increased safety spending.</li>
+    </ul>
+
+    <h2>System Working</h2>
+    <p>
+        The system detects accidents using an <b>impact sensor</b>. If threshold is crossed:
+    </p>
+    <ol>
+        <li>Accident is detected</li>
+        <li>GPS location is recorded</li>
+        <li>Alert message is automatically sent</li>
+    </ol>
+
+    <!-- Embedded GPS Map -->
+    <h2>Live GPS Location Map</h2>
+    <p>This map shows the sample location where the accident is detected based on sensor data.</p>
+
+    <iframe 
+        width="100%" 
+        height="300" 
+        frameborder="0" 
+        scrolling="no" 
+        style="border-radius: 10px; margin-top: 10px;"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=73.8467%2C18.5104%2C73.8667%2C18.5304&layer=mapnik&marker=18.5204%2C73.8567">
+    </iframe>
+
+    <h2>C Code Implementation</h2>
+    <pre>
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+struct AccidentReport {
+    float impactForce;
+    char location[50];
+    char alertMessage[100];
+};
+
+int detectAccident(float impact) {
+    return (impact > 50.0);
+}
+
+void getGPSLocation(char loc[]) {
+    strcpy(loc, "Latitude: 18.5204, Longitude: 73.8567");
+}
+
+void sendAlert(struct AccidentReport report) {
+    printf("\n=== EMERGENCY ALERT SENT ===\n");
+    printf("Impact Force: %.2f\n", report.impactForce);
+    printf("Location: %s\n", report.location);
+    printf("Message: %s\n", report.alertMessage);
+}
+
+int main() {
+    struct AccidentReport report;
+    float force;
+
+    printf("Enter Impact Force: ");
+    scanf("%f", &force);
+
+    report.impactForce = force;
+
+    if (detectAccident(force)) {
+        getGPSLocation(report.location);
+        strcpy(report.alertMessage,
+               "Accident detected! Send ambulance!");
+
+        sendAlert(report);
+    } else {
+        printf("No accident detected.\n");
+    }
+}
+    </pre>
+
+    <h2>Conclusion</h2>
+    <p>
+        The accident detection and alert system reduces emergency response time and helps save lives.
+        This project promotes safer transportation by quickly informing authorities in case of a crash.
+    </p>
+
+    <a class="btn" href="#">Download Project PDF</a>
+
+</div>
+
+<div class="footer">
+    Project by Team 6-A | Road Safety Initiative
+</div>
+
+</body>
+</html>
