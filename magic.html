@@ -1,0 +1,62 @@
+DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Animated Spiral</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    canvas {
+      background: black;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="canvas" width="600" height="600"></canvas>
+
+<script>
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  ctx.strokeStyle = "cyan";
+  ctx.lineWidth = 1;
+
+  let x = canvas.width / 2;
+  let y = canvas.height / 2;
+  let angle = 0;
+  let i = 0;
+
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+
+  function animate() {
+    if (i >= 360) return;
+
+    let distance = i * 2;
+    angle += 91 * Math.PI / 180;
+
+    let newX = x + distance * Math.cos(angle);
+    let newY = y + distance * Math.sin(angle);
+
+    ctx.lineTo(newX, newY);
+    ctx.stroke();
+
+    x = newX;
+    y = newY;
+    i++;
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
+
+</body>
+</html>
