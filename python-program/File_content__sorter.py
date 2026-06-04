@@ -1,0 +1,12 @@
+infile=open("new.txt","r")
+content=infile.read()
+content=content.split()
+print(content)
+content.sort()
+infile.close()
+print("Sorted Content:")
+print(content)
+outputfile=open("res.txt","w")
+for i in content:
+  outputfile.write(i + " ")
+outputfile.close()
