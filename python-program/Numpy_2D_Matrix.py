@@ -1,0 +1,20 @@
+import numpy as np
+rows=int(input("Enter number of rows:"))
+cols=int(input("Enter number of columns:"))
+print("\nEntre elements of Matrix A:")
+A=[list(map(int,input().split())) for _ in range(rows)]
+A=np.array(A)
+print("\nEnter elements of Matrix B:")
+B=[list(map(int,input().split())) for _ in range(rows)]
+B=np.array(B)
+print("\nMatrix A:\n",A)
+print("\nMatrix B:\n",B)
+print("\nAddition:\n",A+B)
+print("\nSubtraction:\n",A-B)
+print("\nElement-wise Multiplication:\n",A*B)
+print("\nMatrix Multiplication:\n",np.dot(A,B))
+print("\nTranspose of Matrix A:\n",A.T)
+print("\nSum of Matrix A:",np.sum(A))
+print("\nSum of Matrix B:",np.sum(B))
+print("\nMean of matrix A:",np.mean(A))
+print("\nMean of matrix B:",np.mean(B))
