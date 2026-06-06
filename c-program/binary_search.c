@@ -21,3 +21,15 @@ if(books[mid]==key)
 found=1;
 break;
 }
+else
+  if(books[mid]<key)
+    low=mid+1;
+else
+    high=mid-1;
+}
+if(found)
+  printf("Book is available.\n");
+else
+  printf("Book is not available.\n");
+return 0;
+}
